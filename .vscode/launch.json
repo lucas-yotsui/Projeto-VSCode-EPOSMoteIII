@@ -1,0 +1,33 @@
+// ########################################################## //
+//                                                            //
+//      Este arquivo configura o debugger para lançar o       //
+//     OpenOCD antes de iniciar, programa necessário para     //
+//     depurar o Tiva e encerrá-lo ao encerrar o debugger.    //
+//                                                            //
+//     Não altere-o a menos que saiba o que está fazendo!     //
+//                                                            //
+// ########################################################## //
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debugger EposMoteIII",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/projeto.axf",
+            "targetArchitecture": "ARM",
+            "args": [],
+            "stopAtEntry": true,    // Mude isso para false se não quiser que o debugger pare no início.
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "MIMode": "gdb",
+            "miDebuggerServerAddress": "localhost:3333",
+            "useExtendedRemote": true,
+            "externalConsole": false,
+            "miDebuggerPath": "C:/ti/gcc-arm-embedded/tools/gcc-arm-none-eabi-10-2020-q4-major/bin/arm-none-eabi-gdb.exe",
+            "preLaunchTask": "Launch OpenOCD",
+            "postDebugTask": "Kill All"
+        },
+    ]
+}
