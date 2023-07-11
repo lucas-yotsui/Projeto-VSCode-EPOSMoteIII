@@ -1,9 +1,6 @@
 # Projeto EPOSMoteIII no Visual Studio Code
 
-<img src=https://lisha.ufsc.br/display2075 height=100px>
-<img src=https://code.visualstudio.com/assets/images/code-stable.png height=100px margin=100px>
-<!-- <img src=https://imgur.com/ggfpJF5.png width=10px margin=100px> -->
-<img src=https://epos.lisha.ufsc.br/display113 height=100px>
+<img src=https://lisha.ufsc.br/display2075 height=100px><img src=https://imgur.com/ggfpJF5.png width=10px margin=100px><img src=https://code.visualstudio.com/assets/images/code-stable.png height=100px margin=100px><img src=https://imgur.com/ggfpJF5.png width=10px margin=100px><img src=https://epos.lisha.ufsc.br/display113 height=100px>
 
 ## Introdução
 
