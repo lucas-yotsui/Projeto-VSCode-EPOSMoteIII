@@ -13,11 +13,18 @@ set(CMAKE_TOOLCHAIN_FILE "cmake/arm-none-eabi-toolchain.cmake")
 cmake_minimum_required(VERSION 3.20)
 project(projeto)
 
+# Make program used
 set(CMAKE_MAKE_PROGRAM mingw32-make)
 # Path to Driverlib
 set(DRIVER_LIBRARY_PATH "C:/ti/cc2538/driverlib/cc2538")
 # Path to USBlib
 set(USB_LIBRARY_PATH "C:/ti/cc2538/usblib/cc2538/source")
+# Compiler warnings
+set(COMPILER_WARNINGS 
+    -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 
+    -mfloat-abi=hard -ffunction-sections -fdata-sections
+    -Wall -Wextra -pedantic -MD -fno-exceptions -fno-rtti
+)
 
 # Project source files
 file(GLOB_RECURSE SOURCES 
@@ -44,11 +51,7 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${DRIVER_LIBRARY_PATH} ${USB_LIBRARY_PATH})
 
 # Platform specific flags
-target_compile_options(${PROJECT_NAME} PRIVATE 
-	-mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 
-	-mfloat-abi=hard -ffunction-sections -fdata-sections
-	-Wall -Wextra -pedantic -MD -fno-exceptions -fno-rtti
-)
+target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_WARNINGS})
 
 # Find the compiler specific libraries
 get_target_property(COMPILE_FLAGS ${PROJECT_NAME} COMPILE_OPTIONS)
