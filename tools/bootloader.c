@@ -1,7 +1,12 @@
 #include <stdbool.h>
-#include <inc/hw_memmap.h>
-#include <source/sys_ctrl.h>
-#include <source/flash.h>
+#include <string.h>
+#include <hw_memmap.h>
+#include <sys_ctrl.h>
+#include <flash.h>
+#include "class_cdc/usb_cdc.h"
+#include "library/usb_firmware_library_headers.h"
+#include "library/usb_in_buffer.h" 
+#include "library/usb_out_buffer.h"
 
 //*****************************************************************************
 //
@@ -25,6 +30,13 @@ void usbsuspHookExitingSuspend(void) {
 #define PAGE_SIZE               2048
 #define PAGE_AS_ADDRESS(page)   (FLASH_BASE + (page * PAGE_SIZE))
 #define NUMBER_OF_FLASH_PAGES   256
+
+
+USB_EPIN_RINGBUFFER_DATA usbCdcInBufferData;
+USB_EPOUT_RINGBUFFER_DATA usbCdcOutBufferData;
+static uint8_t pInBuffer[128];
+static uint8_t pOutBuffer[128];
+static uint8_t pAppBuffer[128];
 
 bool recordProgram(void) {
     // Flag for flash operations results
@@ -121,6 +133,22 @@ void waitForBootloader(void) {
     // Initialize USB interface
     // TODO: Implement USB initial configuration
 
+    // Initialize USB data buffers
+    memset(&usbCdcInBufferData, 0x00, sizeof(USB_EPIN_RINGBUFFER_DATA));
+    usbCdcInBufferData.pBuffer = pInBuffer;
+    usbCdcInBufferData.size = sizeof(pInBuffer);
+    usbCdcInBufferData.endpointReg = USB_F4;
+    usbCdcInBufferData.endpointIndex = 4;
+    usbCdcInBufferData.endpointSize = 64;
+    memset(&usbCdcOutBufferData, 0x00, sizeof(USB_EPOUT_RINGBUFFER_DATA));
+    usbCdcOutBufferData.pBuffer = pOutBuffer;
+    usbCdcOutBufferData.size = sizeof(pOutBuffer);
+    usbCdcOutBufferData.endpointReg = USB_F4;
+    usbCdcOutBufferData.endpointIndex = 4;
+
+    // Initialize USB interface
+    usbCdcInit(115200);
+
     // Flag for handshake detection
     bool usbHandshake = false; 
 
@@ -128,6 +156,7 @@ void waitForBootloader(void) {
     for(uint32_t i = 0; i < 4000000; i++) {
         // Look for a handshake on the USB interface
         // TODO: Implement USB look for handshake
+        usbCdcProcessEvents();
         // usbHandshake = ...
 
         // If usb handshake happens

@@ -1,4 +1,4 @@
-  # ------------------------------------------------------------ #
+# ------------------------------------------------------------ #
 #                                                              #
 #   Este arquivo configura o seu projeto da forma necessária   #
 #              para funcionar com o EposMoteIII.               #
@@ -18,7 +18,7 @@ set(CMAKE_MAKE_PROGRAM mingw32-make)
 # Path to Driverlib
 set(DRIVER_LIBRARY_PATH "C:/ti/cc2538/driverlib/cc2538")
 # Path to USBlib
-set(USB_LIBRARY_PATH "C:/ti/cc2538/usblib/cc2538/source")
+set(USB_LIBRARY_PATH "C:/ti/cc2538/usblib/cc2538")
 # Compiler warnings
 set(COMPILER_WARNINGS 
     -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 
@@ -47,8 +47,13 @@ set(LINKER_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/tools/linker.ld)
 # Add the project
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
-# Include the Driverlib and USBlib C SDK
-target_include_directories(${PROJECT_NAME} PUBLIC ${DRIVER_LIBRARY_PATH} ${USB_LIBRARY_PATH})
+# Include the Driverlib and USBlib C SDKs
+target_include_directories(${PROJECT_NAME} SYSTEM 
+  PRIVATE 
+    ${DRIVER_LIBRARY_PATH}/inc 
+    ${DRIVER_LIBRARY_PATH}/source 
+    ${USB_LIBRARY_PATH}/source
+)
 
 # Platform specific flags
 target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_WARNINGS})
@@ -72,6 +77,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 # Include other libraries
 target_link_libraries(${PROJECT_NAME} PUBLIC
   ${DRIVER_LIBRARY_PATH}/bin/gcc/driverlib.lib
+  ${USB_LIBRARY_PATH}/bin/gcc/usblib.lib
   ${LIBM_PATH}
   ${LIBC_PATH}
   ${LIBGCC_PATH}

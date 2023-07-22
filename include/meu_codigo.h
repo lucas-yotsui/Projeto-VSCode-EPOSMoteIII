@@ -21,10 +21,10 @@
 
 #include <stdbool.h>
 #include <stdint.h>
-#include "inc/hw_memmap.h"
-#include "inc/hw_gpio.h"
-#include "source/gpio.h"
-#include <source/sys_ctrl.h>
+#include <hw_memmap.h>
+#include <hw_gpio.h>
+#include <gpio.h>
+#include <sys_ctrl.h>
 
 void configureMote(void);
 void blinkLED(void);

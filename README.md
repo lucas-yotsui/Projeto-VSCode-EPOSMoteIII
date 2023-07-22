@@ -1,9 +1,8 @@
 # Projeto EPOSMoteIII no Visual Studio Code
 [![Documentação EPOSMoteIII](https://img.shields.io/badge/Documentação_EPOSMoteIII-blue?logo)](https://epos.lisha.ufsc.br/EPOSMote+III)
 ![GitHub issues](https://img.shields.io/github/issues/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)
-![GitHub forks](https://img.shields.io/github/forks/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)
 ![github-stars](https://img.shields.io/github/stars/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)
-![GitHub all releases](https://img.shields.io/github/downloads/lucas-yotsui/Projeto-VSCode-EPOSMoteIII/total?logo=github)
+[![github-release-version](https://img.shields.io/github/v/release/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)](https://github.com/lucas-yotsui/Projeto-VSCode-EPOSMoteIII/releases)
 ![GitHub](https://img.shields.io/github/license/lucas-yotsui/Projeto-VSCode-EPOSMoteIII)
 
 ## Introdução
@@ -14,9 +13,9 @@ A intenção deste projeto é possibilitar o desenvolvimento de aplicações vol
 
 Para tal, esse projeto utiliza as bibliotecas disponibilizadas pela própria fabricante para o microcontrolador no qual se baseia a placa, um CC2538 da Texas Instruments.
 
-O projeto foi desenvolvido para uso com o editor Visual Studio Code, de forma que quando aberto neste editor ele o configura da forma necessária utilizando o gerador recomendado para o CMake e com as configurações do Intellisense que otimizam sua utilização.
+O projeto foi desenvolvido para uso com o editor Visual Studio Code com a extensão CMakeTools, de forma que quando aberto neste editor ele o configura da forma necessária utilizando o gerador recomendado para o CMake e com as configurações do Intellisense que otimizam sua utilização.
 
-O uso deste editor não é obrigatório, porém para uso fora dele fazem-se necessárias algumas adaptações para utilizar este gerador.
+O uso deste editor não é obrigatório, porém o projeto foi concebido para ser utilizado nele, logo, para uso fora dele fazem-se necessárias algumas adaptações para utilizá-lo.
 
 ## Sobre o EPOSMoteIII
 
@@ -35,6 +34,65 @@ Para o uso deste projeto, não é necessária a instalação prévia de nenhum c
 ## Instalação
 
 Para instalar este projeto, basta utilizar o instalador incluso neste repositório, baixando este instalador e executando-o. Encerrado este processo, esse instalador exibirá um menu com orientações sobre o uso do projeto.
+
+## Uso
+
+Caso esteja utilizando o Visual Studio Code com a extensão CMakeTools, ao abrir seu projeto haverá uma barra na parte inferior da janela parecida com a seguinte:
+
+![Barra de Utilidades CMake](https://imgur.com/ysdXhI9.png)
+
+Nesta barra, há algumas opções importantes para o uso do projeto. A primeira delas é o _**botão de seleção de variante de build**_, responsável por determinar o nível de otimização do processo de compilação e inserir informações de debug no executável gerado.
+
+![Botão Otimização](https://imgur.com/qNVVxRr.png)
+
+Em geral, uma vez que não é possível depurar o EPOSMoteIII sem uma interface do tipo JTAG, não é necessário utilizar a variante _**Debug**_. Logo, deve-se usar na maioria dos casos a variante _**Release**_.
+
+O botão seguinte é o de _**seleção de kit de desenvolvimento**_, responsável por selecionar o kit de desenvolvimento utilizado no processo de compilação. 
+
+kit
+![Botão selecionar kit](https://imgur.com/V9cH11l.png)
+
+Ao clicar neste botão, o seguinte menu aparece para selecionar o kit de desenvolvimento desejado. Uma vez que o EPOSMoteIII é baseado em uma arquitetura ARM, deve-se utilizar um kit _**arm-none-eabi**_.
+
+![Menu seleção kit](https://imgur.com/3cVdoqA.png)
+
+O botão seguinte é o de _**build**_, responsável por iniciar o processo de compilação do projeto.
+
+![Botão build](https://imgur.com/r3pnJmK.png)
+
+O último botão relevante a este projeto é o de _**seleção de alvo para build**_.
+
+![Botão de seleção de alvo](https://imgur.com/7qqNFPZ.png)
+
+Ao clicar neste botão, o seguinte menu é exibido:
+
+![Menu seleção alvo](https://imgur.com/Z7QqVSF.png)
+
+As duas opções mais importantes nesse menu são _**projeto**_ e _**flash**_. A primeira é o alvo utilizado apenas para compilar seu programa, ou seja, esta opção apenas cria o executável. A segunda por sua vez faz o upload do executável para o EPOSMoteIII através do programa utilitário baixado pelo instalador deste projeto.
+
+Após selecionado o alvo, deve-se pressionar o botão de build para realizar o processo selecionado, seja ele o de compilação ou o de flash.
+
+### Testando o projeto
+
+Junto com este projeto, é incluso um programa simples que faz o LED on-board do EPOSMoteIII piscar que pode ser usado para testar as funções de upload do executável e analisar a estrutura do projeto que será explicada no tópico seguinte.
+
+Para fazer upload deste exemplo para sua placa, siga os seguintes passos (que também se aplicam para seus projetos futuros baseados nesse template):
+
+1. Crie uma cópia da pasta _Projeto-VSCode-EPOSMoteIII_.
+
+2. Renomeie esta nova pasta para o nome que deseja dar ao seu projeto.
+
+3. Abra essa nova pasta no Visual Studio Code.
+
+4. Selecione o kit de desenvolvimento ARM (_**arm-none-eabi**_).
+
+5. Selecione a variante de build _**Release**_.
+
+6. Selecione o alvo _**flash**_.
+
+7. Clique em _**build**_ (Com a placa ainda desconectada do computador).
+
+8. Siga as instruções na janela do programa de flash.
 
 ## Estrutura do projeto
 

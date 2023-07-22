@@ -30,7 +30,7 @@
 
 /**
  * @brief Define o clock do Tiva em 40 MHz e ativa o portal
- * F da GPIO, definindo os pinos 1, 2 e 3 como saída.
+ * F da GPIO, definindo o pino 3 como saída.
 */
 void configureMote(void) {
     // Define o clock do sistema como 32 MHz.

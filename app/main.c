@@ -7,7 +7,7 @@
 //          de cabeçalho estejam na pasta include.            //
 //                                                            //
 //     Logo, a estrutura recomendada seria parecida com:      //
-//                  meu_projeto                               //     
+//                 meu_projeto                                //     
 //                   |                                        //
 //                   |-app                                    //
 //                   |  |- main.c                             //

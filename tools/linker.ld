@@ -1,8 +1,7 @@
 /* ########################################################################## */
 /*                                                                            */
-/*                  PELO AMOR DE DEUS NÃO MEXE NESSE ARQUIVO.                 */
-/*           NEM EU SEI DIREITO O QUE SIGNIFICA ESSAS COISAS AQUI,            */
-/*              SÓ SEI QUE ELAS SÃO AS CONFIGURAÇÕES DO LINKER.               */
+/*                  PELO AMOR DE DEUS NÃO MEXE NESSE ARQUIVO,                 */
+/*                    ESSAS SÃO AS CONFIGURAÇÕES DO LINKER.                   */
 /*                                                                            */
 /*        SE VOCÊ NÃO SABE O QUE É LINKER, SÓ SAIBA QUE É IMPORTANTE          */
 /*               E SE ESTRAGAR ELE O PROJETO TODO NÃO FUNCIONA.               */

@@ -1,4 +1,10 @@
 {
     "cmake.generator": "MinGW Makefiles",
-    "cmake.saveBeforeBuild": true
+    "cmake.saveBeforeBuild": true,
+    "files.associations": {
+        "*.hta": "html",
+        "usb_in_buffer.h": "c",
+        "usb_firmware_library_headers.h": "c",
+        "usb_out_buffer.h": "c"
+    }
 }
