@@ -31,9 +31,13 @@ Para mais informações a respeito do EPOSMoteIII ou dos kits de expansão, conf
 
 Para o uso deste projeto, não é necessária a instalação prévia de nenhum componente, uma vez que o instalador baixa todas as dependências.
 
+Entretanto, conforme dito anteriormente, é recomendado o uso do editor Visual Studio Code. No momento da inicialização do instalador, será perguntado ao usuário se ele utilizará esse editor ou não. 
+
+Caso o usuário deseje utilizar esse editor, o instalador também baixará as extensões necessárias ao projeto.
+
 ## Instalação
 
-Para instalar este projeto, basta utilizar o instalador incluso neste repositório, baixando este instalador e executando-o. Encerrado este processo, esse instalador exibirá um menu com orientações sobre o uso do projeto.
+Para instalar este projeto, basta utilizar o instalador incluso neste repositório, baixando este instalador e executando-o. Encerrado este processo, esse instalador exibirá um guia com orientações sobre o uso do projeto.
 
 ## Uso
 

@@ -56,7 +56,8 @@
 
 
 extern int main(void);
-extern void waitForBootloader(void);
+extern void prepareBootloader(void);
+extern void bootloader(void);
 
 void ResetISR(void);
 void NmiSR(void);
@@ -252,7 +253,7 @@ void (* const gVectors[])(void) =
    0,                                      // 153
    0,                                      // 154
    0,                                      // 155
-   IntDefaultHandler,                      // 156 USB
+   bootloader,                             // 156 USB
    IntDefaultHandler,                      // 157 RFCORE RX/TX
    IntDefaultHandler,                      // 158 RFCORE Error
    IntDefaultHandler,                      // 159 AES
@@ -327,8 +328,8 @@ void ResetISR (void) {
     HWREG(SYS_CTRL_I_MAP) |= 1;
 #endif
 
-   // Wait for a new flash programming operation
-   waitForBootloader();
+   // Initialize usb interface for bootloader
+   prepareBootloader();
           
    // Call the application's entry point.
    main();
