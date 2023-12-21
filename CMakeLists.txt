@@ -15,10 +15,12 @@ project(projeto)
 
 # Make program used
 set(CMAKE_MAKE_PROGRAM mingw32-make)
+# Root of CC2538 libraries
+set(CC2538_LIBS C:/ti/cc2538)
 # Path to Driverlib
-set(DRIVER_LIBRARY_PATH "C:/ti/cc2538/driverlib/cc2538")
+set(DRIVER_LIBRARY_PATH ${CC2538_LIBS}/driverlib/cc2538)
 # Path to USBlib
-set(USB_LIBRARY_PATH "C:/ti/cc2538/usblib/cc2538")
+set(USB_LIBRARY_PATH ${CC2538_LIBS}/usblib/cc2538)
 # Compiler warnings
 set(COMPILER_WARNINGS 
     -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 

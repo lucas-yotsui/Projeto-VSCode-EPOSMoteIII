@@ -10,13 +10,17 @@
 /*                                                                            */
 /* ########################################################################## */
 
+/* CC2538SF53 */
+
 MEMORY
 {
     FLASH (rx) : ORIGIN = 0x00200000, LENGTH = 0x0007FFFF
-    FLASH_CCA (RX) : ORIGIN = 0x0027FFBF, LENGTH = 96
+    FLASH_CCA (RX) : ORIGIN = 0x0027F800, LENGTH = 0x000007FF
     SRAM_NON_RETENTION (RWX) : ORIGIN =  0x20000000, LENGTH = 0x00004000
     SRAM_RETENTION (RWX) : ORIGIN = 0x20004000, LENGTH = 0x00004000
 }
+
+ENTRY(__cca)
 
 SECTIONS
 {
@@ -27,7 +31,8 @@ SECTIONS
         *(.text*)
         *(.rodata*)
         _etext = .;
-    } > FLASH= 0
+    } > FLASH
+
     .data : AT(ADDR(.text) + SIZEOF(.text))
     {
         _data = .;
@@ -35,6 +40,7 @@ SECTIONS
         *(.data*)
         _edata = .;
     } > SRAM_NON_RETENTION
+    
     .bss :
     {
         _bss = .;
@@ -42,7 +48,9 @@ SECTIONS
         *(COMMON)
         _ebss = .;
     } > SRAM_NON_RETENTION
+ 
     .flashcca :
     { 
+        *(.flashcca)
     } > FLASH_CCA   
 }

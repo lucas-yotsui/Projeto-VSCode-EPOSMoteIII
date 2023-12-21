@@ -54,7 +54,6 @@
     #define HWREG(x) (*((volatile unsigned long *)(x)))
 #endif
 
-
 extern int main(void);
 extern void prepareBootloader(void);
 extern void bootloader(void);
@@ -63,13 +62,6 @@ void ResetISR(void);
 void NmiSR(void);
 void FaultISR(void);
 void IntDefaultHandler(void);
-
-//*****************************************************************************
-//
-// Reserve space for the system stack.
-//
-//*****************************************************************************
-static uint32_t pui32Stack[128];
 
 //*****************************************************************************
 //
@@ -89,9 +81,15 @@ const lockPageCCA_t __cca =
 {
   BOOTLOADER_BACKDOOR_ENABLE,   // Bootloader backdoor enabled in PA7
   FLASH_IMAGE_VALID,            // Image valid bytes
-  FLASH_START_ADDR 				// Vector table located at flash start address
+  FLASH_START_ADDR 		    		// Vector table located at flash start address
 };
 
+//*****************************************************************************
+//
+// Reserve space for the system stack.
+//
+//*****************************************************************************
+static uint64_t pui32Stack[256];
 
 __attribute__ ((section(".vectors"), used))
 void (* const gVectors[])(void) =
@@ -160,7 +158,6 @@ void (* const gVectors[])(void) =
    0,                                      // 61 Reserved
    IntDefaultHandler,                      // 62 uDMA
    IntDefaultHandler,                      // 63 uDMA Error
-#ifndef CC2538_USE_ALTERNATE_INTERRUPT_MAP
    0,                                      // 64 64-155 are not in use
    0,                                      // 65
    0,                                      // 66
@@ -253,14 +250,20 @@ void (* const gVectors[])(void) =
    0,                                      // 153
    0,                                      // 154
    0,                                      // 155
+   //! * ------------------------------------------------- * !//
+   //! |  PRESTA MUITA ATENÇÃO, NÃO MEXE NESSA INTERRUPÇÃO | !//
+   //! |       AQUI OU O BOOTLOADER N FUNCIONA MAIS        | !//
+   //! * ------------------------------------------------- * !//
    bootloader,                             // 156 USB
+   //* * ------------------------------------------------- * *//
+   //* |      A partir daqui pode mexer como quiser...     | *//
+   //* * ------------------------------------------------- * *//
    IntDefaultHandler,                      // 157 RFCORE RX/TX
    IntDefaultHandler,                      // 158 RFCORE Error
    IntDefaultHandler,                      // 159 AES
    IntDefaultHandler,                      // 160 PKA
    IntDefaultHandler,                      // 161 SMTimer
    IntDefaultHandler,                      // 162 MACTimer
-#endif
 };
 
 //*****************************************************************************
@@ -320,13 +323,6 @@ void ResetISR (void) {
 		  "        it      lt\n"
 		  "        strlt   r2, [r0], #4\n"
 		  "        blt     zero_loop");
-
-#ifdef CC2538_USE_ALTERNATE_INTERRUPT_MAP
-    //
-    // Enable alternate interrupt mapping
-    //
-    HWREG(SYS_CTRL_I_MAP) |= 1;
-#endif
 
    // Initialize usb interface for bootloader
    prepareBootloader();

@@ -1,14 +1,16 @@
 #include <stdbool.h>
 #include <string.h>
 #include "hw_memmap.h"
+#include "hw_gpio.h"
+#include "gpio.h"
 #include "sys_ctrl.h"
 #include "flash.h"
+#include "hw_ints.h"
+#include "interrupt.h"
 #include "class_cdc/usb_cdc.h"
 #include "library/usb_firmware_library_headers.h"
 #include "library/usb_in_buffer.h"
 #include "library/usb_out_buffer.h"
-
-#define MESSAGE_SUCCESS 0
 
 //*****************************************************************************
 //
@@ -32,7 +34,7 @@ void usbsuspHookExitingSuspend(void) {
 #define PAGE_SIZE               2048
 #define PAGE_AS_ADDRESS(page)   (FLASH_BASE + (page * PAGE_SIZE))
 #define NUMBER_OF_FLASH_PAGES   256
-
+#define MESSAGE_SUCCESS         0
 
 USB_EPIN_RINGBUFFER_DATA usbCdcInBufferData;
 USB_EPOUT_RINGBUFFER_DATA usbCdcOutBufferData;
@@ -88,13 +90,13 @@ bool recordProgram(void) {
         // Zero tries of the erasing operation were made
         tries = 0;
         do {
-            //** Erase the current flash block **//
+            //** Erase the current flash page **//
             successFlag = FlashMainPageErase(PAGE_AS_ADDRESS(currentPage));
 
-            // If it has tried to erase this block 10 times and it still hasn't worked
+            // If it has tried to erase this page 10 times and it still hasn't worked
             if(++tries == 10 && successFlag != MESSAGE_SUCCESS) {
                 // Send a message to USB to signal failure
-                sendUsbMessage("Failure on programming operation!");
+                sendUsbMessage("Failure!");
                 
                 // Signal to the function caller that the process was faulty
                 return false;
@@ -112,13 +114,13 @@ bool recordProgram(void) {
         receiveUsbMessage();
 
         do {
-            // Record the new chunk of data
+            // Record the new data on this page
             successFlag = FlashMainPageProgram((uint32_t* )data, PAGE_AS_ADDRESS(currentPage), PAGE_SIZE);
             
-            // If it has tried to record this chunk 10 times and it still hasn't worked
+            // If it has tried to record this page 10 times and it still hasn't worked
             if(++tries == 10 && successFlag != MESSAGE_SUCCESS) {
                 // Send a message to USB to signal failure
-                sendUsbMessage("Failure on programming operation!");
+                sendUsbMessage("Failure!");
                 
                 // Signal to the function caller that the process was faulty
                 return false;
@@ -128,11 +130,11 @@ bool recordProgram(void) {
         } while(successFlag != MESSAGE_SUCCESS);
         
         // Send a message that this page's content was recorded
-        sendUsbMessage("Page recorded successfully!");
+        sendUsbMessage("Page recorded!");
     }
 
     // Send a USB message to signal success
-    sendUsbMessage("Program recorded successfully!");
+    sendUsbMessage("Program recorded!");
     
     // Signal to the function caller that the process was successful
     return true;
@@ -150,7 +152,7 @@ void bootloader(void) {
         // If it has tried to do this process 10 times and it still hasn't worked
         if(++processTries == 10) {
             // Send a USB message to signal that the programming operation was faulty
-            sendUsbMessage("Panic! Reset all!");
+            sendUsbMessage("Panic!");
         }
     }
     
@@ -171,6 +173,7 @@ void prepareBootloader(void) {
     usbCdcInBufferData.endpointReg = USB_F4;
     usbCdcInBufferData.endpointIndex = 4;
     usbCdcInBufferData.endpointSize = 64;
+
     memset(&usbCdcOutBufferData, 0x00, sizeof(USB_EPOUT_RINGBUFFER_DATA));
     usbCdcOutBufferData.pBuffer = outBuffer;
     usbCdcOutBufferData.size = sizeof(outBuffer);
