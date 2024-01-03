@@ -14,8 +14,8 @@
 check some documentation and modify this file */
 
 MEMORY {
-    FLASH(rx) : ORIGIN = 0x00200000, LENGTH = 512K - 32
-    FLASH_CCA(rx) : ORIGIN = 0x0027FFE0, LENGTH = 32
+    FLASH(rx) : ORIGIN = 0x00200000, LENGTH = 512K - 44
+    FLASH_CCA(rx) : ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH), LENGTH = 44
     SRAM_RETENTION(rwx) : ORIGIN = 0x20000000, LENGTH = 16K
     SRAM_NON_RETENTION(rwx) : ORIGIN =  0x20004000, LENGTH = 16K
 }
@@ -23,8 +23,8 @@ MEMORY {
 ENTRY(resetHandler)
 
 SECTIONS {
-    .text :
-    {
+    /* Section in which code is placed */
+    .text : {
         _stext = .;
         KEEP(*(.vectors))
         *(.text*)
@@ -32,24 +32,32 @@ SECTIONS {
         _etext = .;
     } > FLASH
 
-    .data : 
-    {
+    /* Section in which initialized data is placed */
+    .data : {
         _sdata = .;
         *(vtable)
         *(.data*)
         _edata = .;
-    } > SRAM_NON_RETENTION AT> FLASH
+    } > SRAM_RETENTION AT> FLASH
     
-    .bss :
-    {
+    /* Section in which uninitialized data is placed */
+    .bss : {
         _sbss = .;
         *(.bss*)
         *(COMMON)
         _ebss = .;
-    } > SRAM_NON_RETENTION
+    } > SRAM_RETENTION
+
+    /* Program stack */
+    .stack (NOLOAD) : {
+        *(.stack)
+    } > SRAM_RETENTION
+
+    /* Program heap is placed entirely on the non retention SRAM */
+    _heap = ORIGIN(SRAM_NON_RETENTION)
+    _eheap = ORIGIN(SRAM_NON_RETENTION) + LENGTH(SRAM_NON_RETENTION)
  
-    .flashcca :
-    { 
+    .flashcca : { 
         *(.flashcca)
     } > FLASH_CCA   
 }

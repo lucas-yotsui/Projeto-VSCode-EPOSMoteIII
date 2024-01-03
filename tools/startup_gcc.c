@@ -13,40 +13,19 @@
 #define SYS_CTRL_I_MAP  0x400D2098              //* Register that selects whether to use regular or alternate interrupt map *//
 #define ALTERNATE_I_MAP 0x00000001              //* Value to write on SYS_CTRL_I_MAP to select alternate interrupt map *//
 
-//*****************************************************************************
-//
-// Customer Configuration Area in Lock Page
-// Holds Image Vector table address (bytes 2012 - 2015) and
-// Image Valid bytes (bytes 2008 -2011)
-//
-//*****************************************************************************
-typedef struct {
-	uint32_t bootloaderCfg;
-    uint32_t imageValid;
-    uint32_t vectorAddr;
-} lockPageCCA_t;
-
-__attribute__((section(".flashcca")))
-lockPageCCA_t __cca =
-{
-  BOOTLOADER_BACKDOOR_ENABLE,   // Bootloader backdoor enabled in PA7
-  FLASH_IMAGE_VALID,            // Image valid bytes
-  FLASH_START_ADDR 		    	// Vector table located at flash start address
-};
-
-
 void resetHandler(void);
 extern void bootloader(void);
 
 //*****************************************************************************
 // Reserve space for the system stack.
 //*****************************************************************************
-uint32_t __STACK_TOP;
+__attribute__ ((section(".stack"), used))
+static uint64_t stack[256];
 
 __attribute__ ((section(".vectors"), used))
 void (* const vectors[])(void) =
 {
-   (void (*)(void))STACK_START,     // 0 Stack pointer
+   (void (*)(void)) stack,          // 0 Stack pointer
    resetHandler,                    // 1 Reset handler
    NMI_handler,                     // 2 The NMI handler
    hard_fault_handler,              // 3 The hard fault handler
@@ -117,6 +96,30 @@ void (* const vectors[])(void) =
    0,                               // 61 Reserved
    uDMA_handler,                    // 62 uDMA
    uDMA_error_handler,              // 63 uDMA Error
+};
+
+//*****************************************************************************
+// Customer Configuration Area in Lock Page
+//*****************************************************************************
+typedef struct {
+	uint32_t bootloaderCfg;
+    uint32_t imageValid;
+    uint32_t vectorAddr;
+    uint8_t  pageLockBits[32];
+} lockPageCCA_t;
+
+__attribute__((section(".flashcca")))
+lockPageCCA_t __cca =
+{
+  BOOTLOADER_BACKDOOR_ENABLE,   // Bootloader backdoor enabled in PA7
+  FLASH_IMAGE_VALID,            // Image valid bytes
+  FLASH_START_ADDR, 		    // Vector table located at flash start address
+  {                             // Unlock all flash pages and debug access
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF 
+  }
 };
 
 extern int main(void);
