@@ -10,40 +10,39 @@
 /*                                                                            */
 /* ########################################################################## */
 
-/* CC2538SF53 */
+/* EPOSMoteIII is based on a CC2538SF53 from Texxas Instruments if you want to 
+check some documentation and modify this file */
 
-MEMORY
-{
-    FLASH (rx) : ORIGIN = 0x00200000, LENGTH = 0x0007FFFF
-    FLASH_CCA (RX) : ORIGIN = 0x0027F800, LENGTH = 0x000007FF
-    SRAM_NON_RETENTION (RWX) : ORIGIN =  0x20000000, LENGTH = 0x00004000
-    SRAM_RETENTION (RWX) : ORIGIN = 0x20004000, LENGTH = 0x00004000
+MEMORY {
+    FLASH(rx) : ORIGIN = 0x00200000, LENGTH = 512K - 32
+    FLASH_CCA(rx) : ORIGIN = 0x0027FFE0, LENGTH = 32
+    SRAM_RETENTION(rwx) : ORIGIN = 0x20000000, LENGTH = 16K
+    SRAM_NON_RETENTION(rwx) : ORIGIN =  0x20004000, LENGTH = 16K
 }
 
-ENTRY(__cca)
+ENTRY(resetHandler)
 
-SECTIONS
-{
+SECTIONS {
     .text :
     {
-        _text = .;
+        _stext = .;
         KEEP(*(.vectors))
         *(.text*)
         *(.rodata*)
         _etext = .;
     } > FLASH
 
-    .data : AT(ADDR(.text) + SIZEOF(.text))
+    .data : 
     {
-        _data = .;
+        _sdata = .;
         *(vtable)
         *(.data*)
         _edata = .;
-    } > SRAM_NON_RETENTION
+    } > SRAM_NON_RETENTION AT> FLASH
     
     .bss :
     {
-        _bss = .;
+        _sbss = .;
         *(.bss*)
         *(COMMON)
         _ebss = .;

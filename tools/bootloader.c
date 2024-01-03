@@ -36,6 +36,8 @@ void usbsuspHookExitingSuspend(void) {
 #define NUMBER_OF_FLASH_PAGES   256
 #define MESSAGE_SUCCESS         0
 
+#define cca PAGE_AS_ADDRESS(255)
+
 USB_EPIN_RINGBUFFER_DATA usbCdcInBufferData;
 USB_EPOUT_RINGBUFFER_DATA usbCdcOutBufferData;
 static uint8_t inBuffer[128];
@@ -83,7 +85,7 @@ bool recordProgram(void) {
     // Flag for flash operations results
     int32_t successFlag; 
     // Counter for number of tries of a specific operation
-    uint8_t tries = 0;
+    uint8_t tries;
 
     //************************** Program a page of the flash **************************//
     for (uint16_t currentPage = 0; currentPage < NUMBER_OF_FLASH_PAGES; currentPage++) {
@@ -94,7 +96,7 @@ bool recordProgram(void) {
             successFlag = FlashMainPageErase(PAGE_AS_ADDRESS(currentPage));
 
             // If it has tried to erase this page 10 times and it still hasn't worked
-            if(++tries == 10 && successFlag != MESSAGE_SUCCESS) {
+            if(++tries > 10 && successFlag != MESSAGE_SUCCESS) {
                 // Send a message to USB to signal failure
                 sendUsbMessage("Failure!");
                 
@@ -118,7 +120,7 @@ bool recordProgram(void) {
             successFlag = FlashMainPageProgram((uint32_t* )data, PAGE_AS_ADDRESS(currentPage), PAGE_SIZE);
             
             // If it has tried to record this page 10 times and it still hasn't worked
-            if(++tries == 10 && successFlag != MESSAGE_SUCCESS) {
+            if(++tries > 10 && successFlag != MESSAGE_SUCCESS) {
                 // Send a message to USB to signal failure
                 sendUsbMessage("Failure!");
                 
@@ -165,7 +167,6 @@ void bootloader(void) {
 */
 void prepareBootloader(void) {
     //******************** Initialize USB interface ********************//
-
     // Initialize USB data buffers
     memset(&usbCdcInBufferData, 0x00, sizeof(USB_EPIN_RINGBUFFER_DATA));
     usbCdcInBufferData.pBuffer = inBuffer;
