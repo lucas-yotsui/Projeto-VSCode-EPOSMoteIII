@@ -25,6 +25,7 @@
 #include <hw_gpio.h>
 #include <gpio.h>
 #include <sys_ctrl.h>
+#include "eposInterrupts.h"
 
 void configureMote(void);
 void blinkLED(void);

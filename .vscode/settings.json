@@ -1,4 +1,9 @@
 {
     "cmake.generator": "MinGW Makefiles",
-    "cmake.saveBeforeBuild": true
+    "cmake.saveBeforeBuild": true,
+    "files.associations": {
+        "*.hta": "html",
+        "sys_ctrl.h": "c",
+        "hw_types.h": "c"
+    }
 }
