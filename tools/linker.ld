@@ -54,8 +54,8 @@ SECTIONS {
     } > SRAM_RETENTION
 
     /* Program heap is placed entirely on the non retention SRAM */
-    _heap = ORIGIN(SRAM_NON_RETENTION)
-    _eheap = ORIGIN(SRAM_NON_RETENTION) + LENGTH(SRAM_NON_RETENTION)
+    _heap = ORIGIN(SRAM_NON_RETENTION);
+    _eheap = ORIGIN(SRAM_NON_RETENTION) + LENGTH(SRAM_NON_RETENTION);
  
     .flashcca : { 
         *(.flashcca)
