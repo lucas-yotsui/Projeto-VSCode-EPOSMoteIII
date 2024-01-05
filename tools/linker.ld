@@ -16,17 +16,18 @@ check some documentation and modify this file */
 MEMORY {
     FLASH(rx) : ORIGIN = 0x00200000, LENGTH = 512K - 44
     FLASH_CCA(rx) : ORIGIN = ORIGIN(FLASH) + LENGTH(FLASH), LENGTH = 44
-    SRAM_RETENTION(rwx) : ORIGIN = 0x20000000, LENGTH = 16K
-    SRAM_NON_RETENTION(rwx) : ORIGIN =  0x20004000, LENGTH = 16K
+    SRAM_NON_RETENTION(rwx) : ORIGIN =  0x20000000, LENGTH = 16K
+    SRAM_RETENTION(rwx) : ORIGIN = 0x20004000, LENGTH = 16K
+    STACK(rwx) : ORIGIN = 0x20008000, LENGTH = 2K
 }
 
-ENTRY(resetHandler)
+ENTRY(reset_handler)
 
 SECTIONS {
     /* Section in which code is placed */
     .text : {
         _stext = .;
-        KEEP(*(.vectors))
+        KEEP(*(.vectors*))
         *(.text*)
         *(.rodata*)
         _etext = .;
@@ -51,7 +52,7 @@ SECTIONS {
     /* Program stack */
     .stack (NOLOAD) : {
         *(.stack)
-    } > SRAM_RETENTION
+    } > STACK
 
     /* Program heap is placed entirely on the non retention SRAM */
     _heap = ORIGIN(SRAM_NON_RETENTION);

@@ -1,12 +1,12 @@
-# ------------------------------------------------------------ #
-#                                                              #
-#   Este arquivo configura o seu projeto da forma necessária   #
-#              para funcionar com o EposMoteIII.               #
-#                                                              #
-#    Alterar este arquivo incorretamente quebrará o projeto    #
-#         Faça-o somente se souber o que está fazendo!         #
-#                                                              #
-# ------------------------------------------------------------ #
+# * ---------------------------------------------------------- * #
+# |                                                            | #
+# |  Este arquivo configura o seu projeto da forma necessária  | #
+# |             para funcionar com o EposMoteIII.              | #
+# |                                                            | #
+# |   Alterar este arquivo incorretamente quebrará o projeto   | #
+# |        Faça-o somente se souber o que está fazendo!        | #
+# |                                                            | #
+# * ---------------------------------------------------------- * #
 
 set(CMAKE_TOOLCHAIN_FILE "cmake/arm-none-eabi-toolchain.cmake")
 
@@ -22,10 +22,10 @@ set(DRIVER_LIBRARY_PATH ${CC2538_LIBS}/driverlib/cc2538)
 # Path to USBlib
 set(USB_LIBRARY_PATH ${CC2538_LIBS}/usblib/cc2538)
 # Compiler warnings
-set(COMPILER_WARNINGS 
-    -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 
-    -mfloat-abi=hard -ffunction-sections -fdata-sections
-    -Wall -Wextra -pedantic -MD -fno-exceptions -fno-rtti
+set(MY_COMPILER_FLAGS 
+    -mthumb -mcpu=cortex-m3 -mfloat-abi=soft 
+    -ffunction-sections -fdata-sections -Wall 
+    -Wextra -pedantic -MD -fno-exceptions -fno-rtti
 )
 
 # Project source files
@@ -58,7 +58,7 @@ target_include_directories(${PROJECT_NAME} SYSTEM
 )
 
 # Platform specific flags
-target_compile_options(${PROJECT_NAME} PRIVATE ${COMPILER_WARNINGS})
+target_compile_options(${PROJECT_NAME} PRIVATE ${MY_COMPILER_FLAGS})
 
 # Find the compiler specific libraries
 get_target_property(COMPILE_FLAGS ${PROJECT_NAME} COMPILE_OPTIONS)

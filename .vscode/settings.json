@@ -4,6 +4,7 @@
     "files.associations": {
         "*.hta": "html",
         "sys_ctrl.h": "c",
-        "hw_types.h": "c"
+        "hw_types.h": "c",
+        "meu_codigo.h": "c"
     }
 }

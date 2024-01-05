@@ -1,0 +1,66 @@
+{
+    "version": "0.2.0",
+    "configurations": [    
+        {
+            "name": "Debug with J-Link",
+            "type": "cppdbg",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}.axf",
+            "stopAtEntry": true,
+            "MIMode": "gdb",
+            "miDebuggerServerAddress": "localhost:2331",
+            "miDebuggerPath": "arm-none-eabi-gdb.exe",
+            "serverLaunchTimeout": 5000,
+            "filterStderr": false,
+            "filterStdout": true,
+            "stopAtConnect": true,
+            "deploySteps": [
+                {
+                    "type": "shell",
+                    "command": "${command:cmake.tasksBuildCommand}",
+                    "continueOn": "Build finished with exit code 0"
+                },
+                {
+                    "type": "shell",
+                    "command": "JLinkGDBServerCL.exe -device CC2538SF53 -endian little -if JTAG -speed 4000 -port 2331 -swoport 2332 -telnetport 2333 -singlerun",
+                    "continueOn": "Waiting for GDB connection..."
+                }
+            ],
+            "logging": {
+                "exceptions": true,
+                "moduleLoad": true,
+                "programOutput": true,
+                "engineLogging": true,
+                "trace": true,
+                "traceResponse": true
+            },
+            "postRemoteConnectCommands": [
+                {
+                    "text": "monitor flash breakpoints = 1",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "monitor flash download = 1",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "monitor reset",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "load",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "monitor reset",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "monitor halt",
+                    "ignoreFailures": false
+                }
+            ]
+        }
+    ],
+}  
