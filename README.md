@@ -163,10 +163,10 @@ Este arquivo vive na raíz do projeto e é responsável por configurar o CMake p
 Este arquivo está configurado propriamente e poucas alterações cabem aos usuários, a principal delas é a seguinte linha:
 ```CMake
 # Compiler warnings
-set(COMPILER_WARNINGS 
-    -mthumb -mcpu=cortex-m4 -mfpu=fpv4-sp-d16 
-    -mfloat-abi=hard -ffunction-sections -fdata-sections
-    -Wall -Wextra -pedantic -MD -fno-exceptions -fno-rtti
+set(MY_COMPILER_FLAGS 
+    -mthumb -mcpu=cortex-m3 -mfloat-abi=soft 
+    -ffunction-sections -fdata-sections -Wall 
+    -Wextra -pedantic -MD -fno-exceptions -fno-rtti
 )
 ```
-Este trecho é responsável por definir os warnings usados na compilação e podem ser ajustados às preferências do usuário (à exceção dos 6 primeiros, específicos da plataforma alvo).
+Este trecho é responsável por definir os warnings usados na compilação e podem ser ajustados às preferências do usuário (à exceção dos 3 primeiros, específicos da plataforma alvo).
