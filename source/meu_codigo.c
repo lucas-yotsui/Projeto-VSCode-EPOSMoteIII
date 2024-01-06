@@ -33,12 +33,6 @@
  * F da GPIO, definindo o pino 3 como saída.
 */
 void configureMote(void) {
-    // Define o clock do sistema como 32 MHz.
-    SysCtrlClockSet(true, true, SYS_CTRL_SYSDIV_32MHZ);
-
-    // Define o clock dos portais de I/O como 32 MHz.
-    SysCtrlIOClockSet(SYS_CTRL_SYSDIV_32MHZ);
-
     // Define o pino 3 do portal C como saída.
     GPIOPinTypeGPIOOutput(GPIO_C_BASE, GPIO_PIN_3);
 }

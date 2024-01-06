@@ -73,7 +73,7 @@ string(STRIP "${LIBM_PATH}" LIBM_PATH)
 
 # Platform specific link definitions
 target_link_options(${PROJECT_NAME} PRIVATE
-  -T ${LINKER_SCRIPT} -Map=${PROJECT_NAME}.map
+  -T ${LINKER_SCRIPT} --gc-sections -Map=${PROJECT_NAME}.map
 )
 
 # Include other libraries

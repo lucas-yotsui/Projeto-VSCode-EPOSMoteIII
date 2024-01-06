@@ -5,6 +5,8 @@
         "*.hta": "html",
         "sys_ctrl.h": "c",
         "hw_types.h": "c",
-        "meu_codigo.h": "c"
+        "meu_codigo.h": "c",
+        "eposinterrupts.h": "c",
+        "usb_firmware_library_headers.h": "c"
     }
 }

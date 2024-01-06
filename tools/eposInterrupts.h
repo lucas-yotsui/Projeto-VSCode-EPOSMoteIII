@@ -51,6 +51,7 @@ void timer3A_handler(void);
 void timer3B_handler(void);
 void uDMA_handler(void);
 void uDMA_error_handler(void);
+void USB_handler(void);
 
 // * ---------------------------------------------------------------------------------------- * //
 // |                                System interrupt handlers                                 | //

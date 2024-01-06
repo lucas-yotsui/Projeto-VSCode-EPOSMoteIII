@@ -3,29 +3,15 @@
 
 #define FLASH_START_ADDR            0x00200000  //* Flash start address *//
 #define FLASH_IMAGE_VALID           0x00000000  //* Identifies that the image in flash is valid *//
-#define BOOTLOADER_BACKDOOR_ENABLE  0xFFFFFFF9  //* Enables the Bootloader Backdoor on GPIOA1 *//
+#define BOOTLOADER_BACKDOOR_DISABLE 0xEFFFFFFF  //* Disables the Bootloader Backdoor *//
 
-#define SRAM_START  0x20000000                  //* SRAM starting location *//
-#define SRAM_LENGTH (16 * 1024)                 //* 16 kB *//
-#define STACK_START (SRAM_START + SRAM_LENGTH)  //* Stack starts right after SRAM ends *//
-
-#define HWREG(x) (*((volatile uint32_t *)(x)))  //* Macro for direct register access *//
-#define SYS_CTRL_I_MAP  0x400D2098              //* Register that selects whether to use regular or alternate interrupt map *//
-#define ALTERNATE_I_MAP 0x00000001              //* Value to write on SYS_CTRL_I_MAP to select alternate interrupt map *//
+#define STACK_TOP                   0x20008000
 
 void reset_handler(void);
-void default_handler(void);
-extern void bootloader(void);
-
-//*****************************************************************************
-// Reserve space for the system stack.
-//*****************************************************************************
-__attribute__ ((section(".stack"), used))
-static uint64_t stack[256];
 
 __attribute__ ((section(".vectors"), used))
 void (* const vectors[])(void) = {
-   (void (*)(void))((unsigned long)stack),                  // 0 Stack pointer
+   (void (*)(void))STACK_TOP,                               // 0 Stack pointer
    reset_handler,                                           // 1 Reset handler
    NMI_handler,                                             // 2 The NMI handler
    hard_fault_handler,                                      // 3 The hard fault handler
@@ -185,7 +171,7 @@ void (* const vectors[])(void) = {
    //! |  PRESTA MUITA ATENÇÃO, NÃO MEXE NESSA INTERRUPÇÃO | !//
    //! |       AQUI OU O BOOTLOADER N FUNCIONA MAIS        | !//
    //! * ------------------------------------------------- * !//
-   bootloader,                                              // 156 USB 2538
+   USB_handler,                                              // 156 USB 2538
    //* * ------------------------------------------------- * *//
    //* |      A partir daqui pode mexer como quiser...     | *//
    //* * ------------------------------------------------- * *//
@@ -201,28 +187,27 @@ void (* const vectors[])(void) = {
 // Customer Configuration Area in Lock Page
 //*****************************************************************************
 typedef struct {
-	uint32_t bootloaderCfg;     // Bootloader backdoor enabled in PA7 
+	uint32_t bootloaderCfg;     // Bootloader backdoor
   uint32_t imageValid;        // Image valid bytes
-  const void* vectorAddr;     // Vector table located at flash start address
+  uint32_t vectorAddr;        // Vector table located at flash start address
   uint8_t  pageLockBits[32];  // Unlock all flash pages and debug access
 } lockPageCCA_t;
 
-__attribute__((section(".flashcca")))
+__attribute__((section(".flashcca"), used))
 const lockPageCCA_t cca_lock_page =
 {
-  BOOTLOADER_BACKDOOR_ENABLE,
+  BOOTLOADER_BACKDOOR_DISABLE,
   FLASH_IMAGE_VALID,
-  &vectors,
-  {
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF 
+  (uint32_t)&vectors, 
+  { 
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
   }
 };
 
 extern int main(void);
-extern void prepareBootloader(void);
 
 extern uint32_t _etext;
 extern uint32_t _sdata;
@@ -230,10 +215,9 @@ extern uint32_t _edata;
 extern uint32_t _sbss;
 extern uint32_t _ebss;
 
-
 void reset_handler (void) {
-  uint32_t *source;
-  uint32_t *destination;
+  uint32_t* source;
+  uint32_t* destination;
 
 	// Copy the data segment initializers from flash to SRAM.
 	source = &_etext;
@@ -243,20 +227,13 @@ void reset_handler (void) {
 
 	// Zero fill the bss segment.
 
-    for(destination = &_sbss; destination < &_ebss; ) {
-        *destination++ = 0;
-    }
-
-   // Initialize usb interface for bootloader
-   // prepareBootloader();
+  for(destination = &_sbss; destination < &_ebss; ) {
+      *destination++ = 0;
+  }
           
-   // Call the application's entry point.
-   main();
+  // Call the application's entry point.
+  main();
 
-   // End here if return from main()
-   while(1);
-}
-
-void default_handler(void) {
+  // End here if return from main()
   while(1);
 }
