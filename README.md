@@ -1,9 +1,9 @@
 # Projeto EPOSMoteIII no Visual Studio Code
 [![Documentação EPOSMoteIII](https://img.shields.io/badge/Documentação_EPOSMoteIII-blue?logo)](https://epos.lisha.ufsc.br/EPOSMote+III)
 ![GitHub issues](https://img.shields.io/github/issues/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)
-![github-stars](https://img.shields.io/github/stars/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)
-[![github-release-version](https://img.shields.io/github/v/release/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)](https://github.com/lucas-yotsui/Projeto-VSCode-EPOSMoteIII/releases)
 ![GitHub](https://img.shields.io/github/license/lucas-yotsui/Projeto-VSCode-EPOSMoteIII)
+[![github-release-version](https://img.shields.io/github/v/release/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)](https://github.com/lucas-yotsui/Projeto-VSCode-EPOSMoteIII/releases)
+![github-stars](https://img.shields.io/github/stars/lucas-yotsui/Projeto-VSCode-EPOSMoteIII?logo=github)
 
 ## Introdução
 
