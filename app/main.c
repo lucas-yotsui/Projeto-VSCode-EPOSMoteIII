@@ -26,7 +26,7 @@
 
 int main(void)  {
     configureMote();
-
+    
     while (true) {
         blinkLED();
     }

@@ -208,6 +208,7 @@ const lockPageCCA_t cca_lock_page =
 };
 
 extern int main(void);
+extern void prepareBootloader(void);
 
 extern uint32_t _etext;
 extern uint32_t _sdata;
@@ -230,6 +231,9 @@ void reset_handler (void) {
   for(destination = &_sbss; destination < &_ebss; ) {
       *destination++ = 0;
   }
+
+  // Prepare bootloader
+  prepareBootloader();
           
   // Call the application's entry point.
   main();
