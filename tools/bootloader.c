@@ -12,9 +12,6 @@
 */
 void prepareBootloader(void) {
     //******************** Initialize USB interface ********************//
-    // It needs the external oscilator
-    SysCtrlClockSet(true, false, SYS_CTRL_SYSDIV_32MHZ);
-
     // Initialize the USB library
     usbfwInit();
 

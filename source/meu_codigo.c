@@ -29,8 +29,8 @@
 #include "meu_codigo.h"
 
 /**
- * @brief Define o clock do Tiva em 40 MHz e ativa o portal
- * F da GPIO, definindo o pino 3 como saída.
+ * @brief Define o clock do Mote em 40 MHz e ativa o portal
+ * C da GPIO, definindo o pino 3 como saída.
 */
 void configureMote(void) {
     // Define o pino 3 do portal C como saída.
