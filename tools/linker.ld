@@ -26,34 +26,39 @@ ENTRY(reset_handler)
 SECTIONS {
     /* Section in which code is placed */
     .text : {
-        _stext = .;
-        KEEP(*(.vectors*))
-        *(.text*)
-        *(.rodata*)
-        _etext = .;
+        _stext = .;         /* Linker symbol marking the start of the .text section for reference in code */
+        KEEP(*(.vectors*))  /* Interrupts vector */
+        *(.text*)           /* Code */
+        *(.rodata*)         /* Read-onl data (const variables) */
+        _etext = .;         /* Linker symbol marking the end of the .text section for reference in code */
     } > FLASH
 
     /* Section in which initialized data is placed */
     .data : {
-        _sdata = .;
-        *(vtable)
-        *(.data*)
-        _edata = .;
+        _sdata = .;         /* Linker symbol marking the start of the .data section for reference in code */
+        *(vtable)           /* Runtime interrupts vector */
+        *(.data*)           /* Initialized variables */
+        _edata = .;         /* Linker symbol marking the end of the .data section for reference in code */
     } > SRAM_RETENTION AT> FLASH
     
     /* Section in which uninitialized data is placed */
     .bss : {
-        _sbss = .;
-        *(.bss*)
-        *(COMMON)
-        _ebss = .;
+        _sbss = .;          /* Linker symbol marking the start of the .bss section for reference in code */
+        *(.bss*)            /* Uninitialized variables or initialized to 0 */
+        *(COMMON)           /* Common symbols (not really sure what they are ¯\_(ツ)_/¯) */
+        _ebss = .;          /* Linker symbol marking the end of the .bss section for reference in code */
     } > SRAM_RETENTION
 
     /* Program heap is placed entirely on the non retention SRAM */
+    /*! Dynamic memory allocation in embedded is almost always a bad idea! Even though this is called !*/
+    /*!  heap it should not be used for that, rather it's intended to be used when some extra memory  !*/
+    /*!  is needed. Please take note that this memory region does not retain its data after entering  !*/
+    /*!                                          sleep mode.                                          !*/
     _heap = ORIGIN(SRAM_NON_RETENTION);
     _eheap = ORIGIN(SRAM_NON_RETENTION) + LENGTH(SRAM_NON_RETENTION);
- 
+    
+    /* Customer Configuration Area + Page Lock Bits (more info about both on the CC2538 User Guide) */
     .flashcca : { 
-        KEEP(*(.flashcca))
+        KEEP(*(.flashcca))  /* CCA + Lock Page bits */
     } > FLASH_CCA   
 }
